@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import { Form, Icon, Input, Button } from 'antd';
 
-import logo from '../../assets/less/logo.png';
-import  '../../assets/less/index.less';
+import logo from './logo.png';
+import './index.less';
 
 
 const Item =Form.Item;
@@ -48,13 +48,12 @@ class Login extends Component {
       //不传参代表校验通过
       callback();
     }
-  }
+  };
 
   render() {
     //getFieldDecorator 也是一个高阶组件，高阶组件本身就是函数
      const { getFieldDecorator } = this.props.form;
-    return (
-      <div className="login">
+    return  <div className="login">
         <header className="login-header">
           <img src={logo} alt="logo"/>
           <h1>React项目: 后台管理系统</h1>
@@ -97,7 +96,7 @@ class Login extends Component {
         </section>
       </div>
 
-    )
+
   }
 }
 
