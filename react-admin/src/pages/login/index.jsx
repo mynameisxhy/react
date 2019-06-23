@@ -2,18 +2,15 @@
 import { Form, Icon, Input, Button } from 'antd';
 import { reqLogin } from "../../api";
 
- import logo from './logo.png';
+ import logo from '../../assets/images/logo.png';
 import './index.less';
-
 
 const Item =Form.Item;
 
-
 class Login extends Component {
-
   login=(e)=>{
     e.preventDefault();
-    //用来校验表单并获取表单的值
+    //validateFields  用来校验表单并获取表单的值
     this.props.form.validateFields( async (error,values) =>{
       // console.log(error,values);
      /* error代表表单校验
@@ -29,15 +26,12 @@ class Login extends Component {
         }else{
           this.props.form.resetFields('[password]');
         }
-
-
      }else{
        //校验失败
        console.log('登录表单校验失败',error);
      }
     })
   };
-
   //自定义校验规则函数
   validator = (rule,value,callback) => {
     //callback必须调用
@@ -61,53 +55,51 @@ class Login extends Component {
 
   render() {
     //getFieldDecorator 也是一个高阶组件，高阶组件本身就是函数
-     const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     return  <div className="login">
-        <header className="login-header">
-          <img src={logo} alt="logo"/>
-          <h1>React项目: 后台管理系统</h1>
-        </header>
-        <section className="login-content">
-          <h2>用户登录</h2>
-          <Form onSubmit={this.login} className="login-form">
-            <Item>
-              {
-                getFieldDecorator( 'username', {
-                    rules: [
-                      {
-                        validator:this.validator
-                      }
-                    ]
-                  }
-                  )(
-                  <Input className="login-input" prefix={<Icon type="user" />} placeholder="用户名" />
-                )}
-            </Item>
-            <Item>
-              {
-                  getFieldDecorator( 'password', {
-                    rules: [
-                      /*{ required: true, message: '请输入用户名!' },
-                      {min:4,message:'密码必须大于4位'},
-                      {max:15,message:'密码必须大于4位必须小于15位'},
-                      {pattern:/^[a-zA-Z0-9]+$/,message:'密码必须大于4位只能包含英文字符、数字、下划线'}*/
-                      {
-                        validator:this.validator
-                      }
-                      ],
-                  }
-                  )(
-                    <Input className="login-input" prefix={<Icon type="lock" />} placeholder="密码" type="password"/>
+      <header className="login-header">
+        <img src={logo} alt="logo"/>
+        <h1>React项目: 后台管理系统</h1>
+      </header>
+      <section className="login-content">
+        <h2>用户登录</h2>
+        <Form onSubmit={this.login} className="login-form">
+          <Item>
+            {
+              getFieldDecorator( 'username', {
+                  rules: [
+                    {
+                      validator:this.validator
+                    }
+                  ]
+                }
+                )(
+                <Input className="login-input" prefix={<Icon type="user" />} placeholder="用户名" />
               )}
-            </Item>
-            <Item>
-            </Item>
-            <Button type="primary" htmlType="submit" className="login-btn">登录</Button>
-          </Form>
-        </section>
-      </div>
-
-
+          </Item>
+          <Item>
+            {
+              getFieldDecorator( 'password', {
+                rules: [
+                  /*{ required: true, message: '请输入用户名!' },
+                  {min:4,message:'密码必须大于4位'},
+                  {max:15,message:'密码必须大于4位必须小于15位'},
+                  {pattern:/^[a-zA-Z0-9]+$/,message:'密码必须大于4位只能包含英文字符、数字、下划线'}*/
+                  {
+                    validator:this.validator
+                  }
+                  ],
+              }
+              )(
+                <Input className="login-input" prefix={<Icon type="lock" />} placeholder="密码" type="password"/>
+            )}
+          </Item>
+          <Item>
+          </Item>
+          <Button type="primary" htmlType="submit" className="login-btn">登录</Button>
+        </Form>
+      </section>
+    </div>
   }
 }
 
