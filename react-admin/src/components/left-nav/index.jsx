@@ -9,11 +9,10 @@ import './index.less';
 
 const { SubMenu , Item} = Menu;
 
- class LeftNav extends Component{
+class LeftNav extends Component{
   static propTypes = {
     collapsed: PropTypes.bool.isRequired
   };
-
   createMenu = (menu) =>{
     return <Item key={menu.key}>
       <Link to={menu.key}>
@@ -25,8 +24,7 @@ const { SubMenu , Item} = Menu;
   //在 componentWillMount 中 使用map加载menuList 生成动态菜单， 在render之前，只会执行一次
   componentWillMount(){
 
-      const { pathname } = this.props.location ; //根据 withRouter 传递的属性获取菜单地址
-
+    const { pathname } = this.props.location ; //根据 withRouter 传递的属性获取菜单地址
     //根据menuList 生成菜单
     this.menus = menuList.map((menu) => {
       //判断是一级菜单还是二级菜单
@@ -36,9 +34,9 @@ const { SubMenu , Item} = Menu;
           key={menu.key}
           title={
             <span>
-                <Icon type={menu.icon} />
-                <span>{menu.title}</span>
-              </span>
+              <Icon type={menu.icon} />
+              <span>{menu.title}</span>
+            </span>
           }
         >
           {
@@ -62,85 +60,85 @@ const { SubMenu , Item} = Menu;
   render(){
     const { collapsed } = this.props;
     return(<div>
-        <Link className="header-left" to="/home">
-          <img src={logo} alt="logo"/>
-          <h1 style={{display:collapsed ? 'none' : 'block'}}>硅谷后台</h1>
-        </Link>
+      <Link className="header-left" to="/home">
+        <img src={logo} alt="logo"/>
+        <h1 style={{display:collapsed ? 'none' : 'block'}}>硅谷后台</h1>
+      </Link>
 
-       {/* defaultSelectedKeys 初始化选中的菜单选项*/}
-        <Menu theme="dark" defaultSelectedKeys={[this.selectedKey]} defaultOpenKeys={[this.openKey]} mode="inline">
-          {
-            this.menus
+     {/* defaultSelectedKeys 初始化选中的菜单选项*/}
+      <Menu theme="dark" defaultSelectedKeys={[this.selectedKey]} defaultOpenKeys={[this.openKey]} mode="inline">
+        {
+          this.menus
+        }
+        {/*<Item key="home">
+          <Link to="/home">
+            <Icon type="home" />
+            <span>首页</span>
+          </Link>
+        </Item>
+        <SubMenu
+          key="sub1"
+          title={
+            <span>
+              <Icon type="appstore" />
+              <span>商品</span>
+            </span>
           }
-          {/*<Item key="home">
-            <Link to="/home">
-              <Icon type="home" />
-              <span>首页</span>
+        >
+          <Item key="/category">
+            <Link to="/category">
+              <Icon type="tool" />
+              <span>品类管理</span>
             </Link>
           </Item>
-          <SubMenu
-            key="sub1"
-            title={
-              <span>
-                <Icon type="appstore" />
-                <span>商品</span>
-              </span>
-            }
-          >
-            <Item key="/category">
-              <Link to="/category">
-                <Icon type="tool" />
-                <span>品类管理</span>
-              </Link>
-            </Item>
-            <Item key="/commodity">
-              <Link to="/commodity">
-                <Icon type="unordered-list" />
-                <span>商品管理</span>
-              </Link>
-            </Item>
-          </SubMenu>
-          <Item key="user">
-            <Link to="/user">
-              <Icon type="user" />
-              <span>用户管理</span>
+          <Item key="/commodity">
+            <Link to="/commodity">
+              <Icon type="unordered-list" />
+              <span>商品管理</span>
             </Link>
           </Item>
-          <Item key="authority">
-            <Link to="/authority">
-              <Icon type="safety" />
-              <span>权限管理</span>
+        </SubMenu>
+        <Item key="user">
+          <Link to="/user">
+            <Icon type="user" />
+            <span>用户管理</span>
+          </Link>
+        </Item>
+        <Item key="authority">
+          <Link to="/authority">
+            <Icon type="safety" />
+            <span>权限管理</span>
+          </Link>
+        </Item>
+        <SubMenu
+          key="sub2"
+          title={
+            <span>
+              <Icon type="area-chart" />
+              <span>图形图表</span>
+            </span>
+          }
+        >
+          <Item key="/bar-chart">
+            <Link to="/bar-chart">
+              <Icon type="bar-chart" />
+              <span>柱形图</span>
             </Link>
           </Item>
-          <SubMenu
-            key="sub2"
-            title={
-              <span>
-                <Icon type="area-chart" />
-                <span>图形图表</span>
-              </span>
-            }
-          >
-            <Item key="/bar-chart">
-              <Link to="/bar-chart">
-                <Icon type="bar-chart" />
-                <span>柱形图</span>
-              </Link>
-            </Item>
-            <Item key="/line-chart">
-              <Link to="/line-chart">
-                <Icon type="line-chart" />
-                <span>折线图</span>
-              </Link>
-            </Item>
-            <Item key="/pie-chart">
-              <Link to="/pie-chart">
-                <Icon type="pie-chart" />
-                <span>饼图</span>
-              </Link>
-            </Item>
-          </SubMenu>*/}
-        </Menu>
+          <Item key="/line-chart">
+            <Link to="/line-chart">
+              <Icon type="line-chart" />
+              <span>折线图</span>
+            </Link>
+          </Item>
+          <Item key="/pie-chart">
+            <Link to="/pie-chart">
+              <Icon type="pie-chart" />
+              <span>饼图</span>
+            </Link>
+          </Item>
+        </SubMenu>*/}
+      </Menu>
       </div>
     )
   }

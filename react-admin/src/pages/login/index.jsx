@@ -1,6 +1,7 @@
  import React from 'react';
 import { Form, Icon, Input, Button } from 'antd';
 import { reqLogin } from "../../api";
+import { setItem } from '../../utils/storage-tools';
 
 import logo from '../../assets/images/logo.png';
 import './index.less';
@@ -22,9 +23,12 @@ function Login(props){
      // console.log(username,password) ;
     const result = await reqLogin( username , password );
       if( result ){
+        //登录成功
+        //只有这里能拿到用户名密码。保存用户信息
+        setItem(result);
         props.history.replace('/');
       }else{
-        props.form.resetFields('[password]');
+        props.form.resetFields(['password']);
       }
    }else{
      //校验失败
@@ -66,11 +70,11 @@ function Login(props){
       <Item>
         {
           getFieldDecorator( 'username', {
-              rules: [
-                {
-                  validator:validator
-                }
-              ]
+            rules: [
+              {
+                validator:validator
+              }
+            ]
             }
             )(
             <Input className="login-input" prefix={<Icon type="user" />} placeholder="用户名" />

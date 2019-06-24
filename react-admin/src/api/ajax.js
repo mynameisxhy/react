@@ -15,6 +15,7 @@ export default function ajax(url,data={},method='get') {
 
       if ( data.status === 0 ){
         return data.data;
+
       }else{
         message.error(data.msg,2);
       }
