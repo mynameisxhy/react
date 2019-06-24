@@ -18,6 +18,7 @@ class HeaderMain extends Component {
     weatherImg:'http://api.map.baidu.com/images/weather/day/qing.png'
   };
   componentWillMount(){
+    //只需读取一次
     this.username = getItem().username;
     this.title = this.getTitle(this.props);
   }
@@ -70,7 +71,7 @@ class HeaderMain extends Component {
     const { sysTime , weather , weatherImg } = this.state;
     return <div className="header-main">
       <div className="header-main-top">
-        <span>欢迎，admin</span>
+        <span>欢迎，{this.username}</span>
         <MyButton onClick={this.logout}>退出</MyButton>
       </div>
       <div className="header-main-bottom">

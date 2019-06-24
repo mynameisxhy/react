@@ -8,7 +8,7 @@ export const reqLogin = ( username , password ) => ajax('/login' , { username , 
 //请求验证用户信息
 export const reqValidateUserInfo = (id) => ajax('/validate/user',{id},'POST');
 
-//请求天气
+//请求天气 ,需要jsonp 下载包，并引入 jsonp只能发get请求
 export const reqWeather = function () {
   return new Promise((resolve,reject) => {
     jsonp(`http://api.map.baidu.com/telematics/v3/weather?location=深圳&output=json&ak=3p49MVra6urFRGOT9s8UBWr2`,{},function (err,data) {
@@ -23,4 +23,7 @@ export const reqWeather = function () {
       }
     })
   })
-}
+};
+
+
+export const reqCategories = (parentId) => ajax('/manage/category/list',{parentId});
