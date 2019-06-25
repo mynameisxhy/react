@@ -18,11 +18,11 @@ import './index.less';
 
 const { Header, Content, Footer , Sider } = Layout;
 
-
-
 export default class Admin extends Component {
   state = {
     collapsed: false,  //根据状态控制折叠， 为false就不折叠
+    isLoading:true,
+    success:false
   };
   //collapse 折叠面板   oncollapse 切换面板的回调
   onCollapse = collapsed => {
@@ -39,14 +39,22 @@ export default class Admin extends Component {
       //如果是登录进来的，就不需要。如果用户使用之前的值。刷新访问进来，就需要
 
       const result = await reqValidateUserInfo(user._id);
-      if(result) return;
+      if(result){
+        return this.setState({
+          isLoading:false,
+          success:true
+        })
+      }
     }
-    this.props.history.replace('/login');
+    this.setState({
+      isLoading:false,
+      success:false
+    })
   }
   render() {
-    const { collapsed } = this.state;
-    return (
-      <Layout style={{ minHeight: '100vh' }}>
+    const { collapsed ,isLoading ,success } = this.state;
+    if(isLoading) return null;
+    return success ? <Layout style={{ minHeight: '100vh' }}>
         <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
           <LeftNav collapsed={collapsed} />
         </Sider>
@@ -72,7 +80,7 @@ export default class Admin extends Component {
           </Content>
           <Footer style={{ textAlign: 'center' }}>推荐使用谷歌浏览器，可以获得更佳页面操作体验</Footer>
         </Layout>
-      </Layout>
-    )
+      </Layout> : <Redirect to="/login" />;
+
   }
 }

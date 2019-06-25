@@ -25,6 +25,8 @@ class LeftNav extends Component{
   componentWillMount(){
 
     const { pathname } = this.props.location ; //根据 withRouter 传递的属性获取菜单地址
+
+    let isHome = true;
     //根据menuList 生成菜单
     this.menus = menuList.map((menu) => {
       //判断是一级菜单还是二级菜单
@@ -45,17 +47,19 @@ class LeftNav extends Component{
               if (item.key === pathname) { //如果他们相等，就说明当前地址是二级菜单 ，需要展开一级菜单
                 //初始化打开的菜单
                 this.openKey = menu.key;
+                isHome = false;
               }
               return this.createMenu(item)
             })
           }
         </SubMenu>
       }else{
+        if(menu.key === pathname) isHome = true;
         return this.createMenu(menu);
       }
     } )
     //初始化选中的菜单
-    this.selectedKey = pathname;
+    this.selectedKey = isHome ? '/home' : pathname;
   }
   render(){
     const { collapsed } = this.props;

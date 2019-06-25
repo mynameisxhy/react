@@ -23,18 +23,26 @@ class HeaderMain extends Component {
     this.title = this.getTitle(this.props);
   }
   async componentDidMount(){
-    setInterval(() => {
+   this.timeId = setInterval(() => {
       this.setState({
         sysTime:Date.now()});
     },1000);
     //发送天气请求，请求天气
-    const result = await reqWeather();
+    const { promise , cancel } = reqWeather();
+    this.cancel =cancel;
+    const result = await promise;
     if(result){
       this.setState(result);
     }
   }
   componentWillReceiveProps(nextProps){
     this.title = this.getTitle(nextProps);
+  }
+  componentWillUnmount(){
+    //清除定时器
+    clearInterval(this.timeId);
+    //取消了ajax请求
+    this.cancel();
   }
   logout=() => {
     confirm({
