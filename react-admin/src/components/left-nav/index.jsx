@@ -23,9 +23,15 @@ class LeftNav extends Component{
   };
   //在 componentWillMount 中 使用map加载menuList 生成动态菜单， 在render之前，只会执行一次
   componentWillMount(){
+    let { pathname } = this.props.location ; //根据 withRouter 传递的属性获取菜单地址
 
-    const { pathname } = this.props.location ; //根据 withRouter 传递的属性获取菜单地址
-
+    /*
+    *     pathname: '/product/saveupdate'  --> '/product
+    * */
+    const pathnameReg = /^\/product\//;
+    if(pathnameReg.test(pathname)){
+      pathname = pathname.slice(0,8);
+    }
     let isHome = true;
     //根据menuList 生成菜单
     this.menus = menuList.map((menu) => {
@@ -54,7 +60,7 @@ class LeftNav extends Component{
           }
         </SubMenu>
       }else{
-        if(menu.key === pathname) isHome = true;
+        if(menu.key === pathname) isHome = false;
         return this.createMenu(menu);
       }
     } )

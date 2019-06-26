@@ -10,18 +10,37 @@ import UpdateCategoryNameForm from './update-category-name';
 export default class Category extends Component {
   state = {
     categories:[], //一级分类列表
+    subCategories:[], //二级分类列表
+    isShowSubCategories:false, //是否显示二级分类列表
     isShowAddCategory:false, //显示添加品类
-    isShowUpdateCategoryName:false  //显示修改分类名称
+    isShowUpdateCategoryName:false,  //显示修改分类名称
+    loading:true  //是否显示Loading
   };
   category = {};
 
-  async componentDidMount(){ //发请求
-    const result =await reqCategories('0');
-    if(result){
-      this.setState({categories:result});
-    }
+  componentDidMount(){ //发请求
+    this.fetchCategories('0')
   };
-
+  fetchCategories =async (parentId) =>{
+    this.setState({
+      loading:true
+    });
+   const result = await reqCategories(parentId);
+   if(result){
+     if(parentId === '0'){
+       this.setState({categories:result}); //用一个新数组接收一级分类数据
+     }else{
+       this.setState({
+         subCategories:result,  //用一个新数组接收二级分类数据
+         isShowSubCategories:true
+       })
+     }
+   }
+   this.setState({
+     loading:false
+   })
+  };
+  //添加品类
   addCategory = () =>{
     const { form } = this.addCategoryForm.props;
     form.validateFields(async (err,values) => {
@@ -36,22 +55,24 @@ export default class Category extends Component {
           form.resetFields(['parentId','categoryName']);
 
           //如果是一级分类：就在一级分类列表中展示
-          //如果是二级分类。 就在二级分类列表中展示。而不需要在一级分类中展示
+          //如果是二级分类。
+          //    当前显示的一级分类不需要展示
+          //    当前显示的是二级分类，还需要满足添加分类的一级分类和当前显示的一级分类一致，才显示。否则不显示
 
+          const options = { isShowAddCategory:false } ;
+          const { isShowSubCategories } = this.state;
           if(result.parentId === '0'){
-            this.setState({
-              categories:[...this.state.categories,result] //创建一个新数组，并将新添加的一级分类 塞到数组最后面
-            })
+            options.categories=[...this.state.categories,result] //创建一个新数组，并将新添加的一级分类 塞到数组最后面
+          }else if(isShowSubCategories && result.parentId === this.parentCategory._id ){
+            options.subCategories=[...this.state.subCategories,result]
           }
-          this.setState({
-              isShowAddCategory:false
 
-            })
+           //统一更新
+          this.setState(options);
         }
       }
     })
   };
-
   /*
   *  切换显示
   * */
@@ -91,9 +112,19 @@ export default class Category extends Component {
           const result =await reqUpdateCategoryName(categoryId, categoryName);
 
           if (result) {
+            const { parentId } = this.category;
+            //一级分类数据
+            let categoryDate = this.state.categories;
+            let stateName = 'categories';
+            if( parentId !== '0'){
+              //二级分类数据
+              categoryDate = this.state.subCategories;
+              stateName = 'subCategories';
+            }
+
             //不想修改原数据
             console.log(result);
-            const categories = this.state.categories.map((category) => {
+            const categories = categoryDate.map((category) => {
               let {_id, name, parentId} = category;
               //找到对应id 的category，修改分类名称
               if (_id === categoryId) {
@@ -113,16 +144,30 @@ export default class Category extends Component {
               message.success('更新分类名称成功',2);
               this.setState({
                 isShowUpdateCategoryName: false,
-                categories
+                //判断，根据传入的值 显示数据
+                [stateName]:categories
               })
             }
           }
         })
   };
 
+  //显示子品类
+  showSubCategory = (category) =>{
+    return async () =>{
+      //请求二级分类数据
+      this.parentCategory = category ;
+      this.fetchCategories(category._id)
+    }
+  };
+  goBack = () =>{
+    this.setState({
+      isShowSubCategories : false
+    })
+  };
 
   render() {
-    const { categories,  isShowAddCategory ,isShowUpdateCategoryName } = this.state
+    const { categories , subCategories ,  isShowAddCategory ,isShowSubCategories ,isShowUpdateCategoryName ,loading } = this.state;
     const columns = [
       {
         title: '品类名称',
@@ -138,7 +183,9 @@ export default class Category extends Component {
 
           return <div>
             <MyButton onClick={ this.saveCategory(category) }>修改名称</MyButton>
-            <MyButton>查看其子品类</MyButton>
+            {
+              this.state.isShowSubCategories ? null : <MyButton onClick={ this.showSubCategory(category)}>查看其子品类</MyButton>
+            }
           </div>
         }
       },
@@ -161,10 +208,12 @@ export default class Category extends Component {
         categoryName:'键盘'
       }
     ]*/
-    return <Card title="一级分类列表" extra={<Button type="primary" onClick={this.toggleDisplay('isShowAddCategory',true)}><Icon type="plus" />添加品类目录</Button>}>
+    return <Card
+      title={isShowSubCategories ? <div><MyButton onClick={this.goBack}>一级分类</MyButton><Icon type="arrow-right"/>&nbsp;{this.parentCategory.name}</div> :"一级分类列表" }
+       extra={<Button type="primary" onClick={this.toggleDisplay('isShowAddCategory',true)}><Icon type="plus" />添加品类目录</Button>}>
       <Table
         columns={columns}
-        dataSource={categories}
+        dataSource={isShowSubCategories ? subCategories : categories} //数据源，显示数据
         bordered
         pagination={{
           showSizeChanger:true,
@@ -173,6 +222,7 @@ export default class Category extends Component {
           showQuickJumper:true
         }}
         rowKey="_id"
+        loading={loading}
       />
       <Modal
         title="添加分类"

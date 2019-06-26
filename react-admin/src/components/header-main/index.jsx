@@ -58,7 +58,15 @@ class HeaderMain extends Component {
     });
   };
   getTitle = (nextProps) => {
-    const { pathname } =nextProps.location;
+    let { pathname } = nextProps.location ; //根据 withRouter 传递的属性获取菜单地址
+
+    /*
+    *     pathname: '/product/saveupdate'  --> '/product
+    * */
+    const pathnameReg = /^\/product\//;
+    if(pathnameReg.test(pathname)){
+      pathname = pathname.slice(0,8);
+    }
     for (let i=0;i<menuList.length ;i++) {
       const menu = menuList[i];
       if(menu.children){
